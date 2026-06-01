@@ -6,11 +6,19 @@ let socket: Socket | null = null
 
 export const socketService = {
   connect: (token?: string): Socket => {
-    if (socket?.connected) return socket
+    const activeToken = token || localStorage.getItem('token') || ''
+
+    if (socket) {
+      if (socket.connected) {
+        socket.auth = { token: activeToken }
+        socket.disconnect().connect()
+      }
+      return socket
+    }
 
     socket = io(SOCKET_URL, {
       auth: {
-        token: token || localStorage.getItem('token') || '',
+        token: activeToken,
       },
       reconnection: true,
       reconnectionDelay: 1000,

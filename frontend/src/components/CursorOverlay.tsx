@@ -1,31 +1,39 @@
 import { useEffect, useRef } from 'react'
 import { useRoomStore } from '../stores/roomStore'
+import socketService from '../services/socket'
 
 export default function CursorOverlay() {
   const { participants, currentUser } = useRoomStore()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const container = containerRef.current?.parentElement
+    if (!container || !currentUser) return
+
     const handleMouseMove = (e: MouseEvent) => {
-      // Emit cursor position to socket
-      if (currentUser) {
-        // socketService.moveCursor(e.clientX, e.clientY)
+      const rect = container.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      
+      // Only emit if within boundaries
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        socketService.moveCursor(x, y)
       }
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    container.addEventListener('mousemove', handleMouseMove)
+    return () => container.removeEventListener('mousemove', handleMouseMove)
   }, [currentUser])
 
   return (
-    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-40">
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden z-20">
       {participants.map((user) => {
         if (user.id === currentUser?.id) return null
 
         return (
           <div
             key={user.id}
-            className="fixed transition-all duration-75"
+            className="absolute transition-all duration-75"
             style={{
               left: `${user.cursorX}px`,
               top: `${user.cursorY}px`,

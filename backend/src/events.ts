@@ -26,7 +26,7 @@ export const setupSocketEvents = (io: Server) => {
     // Join room
     socket.on('room:join', async (data: { code: string }) => {
       try {
-        if (!socket.roomId) {
+        if (!socket.roomId || !socket.userId) {
           socket.emit('error', { message: 'Not authenticated', code: 'AUTH_ERROR' })
           return
         }
@@ -34,14 +34,12 @@ export const setupSocketEvents = (io: Server) => {
         socket.join(socket.roomId)
         const participants = await UserService.getUsersByRoom(socket.roomId)
         const room = await RoomService.getRoomById(socket.roomId)
+        const user = await UserService.getUserById(socket.userId)
 
         // Notify others
-        socket.to(socket.roomId).emit('user:joined', {
-          id: socket.userId,
-          name: 'New User',
-          isOwner: false,
-          hasControl: false,
-        })
+        if (user) {
+          socket.to(socket.roomId).emit('user:joined', user)
+        }
 
         // Send room info to joining user
         socket.emit('room:joined', {
@@ -140,12 +138,17 @@ export const setupSocketEvents = (io: Server) => {
     })
 
     // Load URL
-    socket.on('website:load', (data: { url: string }) => {
+    socket.on('website:load', async (data: { url: string }) => {
       if (!socket.roomId) return
 
-      io.to(socket.roomId).emit('website:load', {
-        url: data.url,
-      })
+      try {
+        await RoomService.updateRoomUrl(socket.roomId, data.url)
+        io.to(socket.roomId).emit('website:load', {
+          url: data.url,
+        })
+      } catch (error) {
+        console.error('Load URL error:', error)
+      }
     })
 
     // Disconnect

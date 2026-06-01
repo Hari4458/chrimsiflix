@@ -114,7 +114,6 @@ export default function RoomPage() {
 
   return (
     <div className="min-h-screen p-4 md:p-6">
-      <CursorOverlay />
 
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
@@ -139,11 +138,15 @@ export default function RoomPage() {
                 <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
               )}
             </div>
-            <div className="flex-1 rounded-lg overflow-hidden bg-darker">
+            <div className="shared-browser-container relative flex-1 rounded-lg overflow-hidden bg-darker">
               <BrowserFrame
                 url={room.currentUrl}
                 isLoading={isLoadingUrl}
               />
+              {!currentUser.hasControl && (
+                <div className="absolute inset-0 bg-transparent z-10 cursor-not-allowed" title="Request control to interact with the browser" />
+              )}
+              <CursorOverlay />
             </div>
             {room.currentUrl && (
               <p className="text-xs text-gray-400 mt-2 truncate">{room.currentUrl}</p>

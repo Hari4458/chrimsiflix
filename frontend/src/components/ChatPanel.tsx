@@ -55,7 +55,6 @@ export default function ChatPanel() {
           onChange={(e) => handleTyping(e.target.value)}
           placeholder="Type a message..."
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          disabled={!currentUser?.hasControl}
         />
         <Button onClick={handleSendMessage} disabled={!message.trim()}>
           Send
