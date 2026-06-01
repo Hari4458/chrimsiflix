@@ -129,7 +129,8 @@ export default function RoomPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Content */}
-        <d<Card className="h-96 md:h-screen flex flex-col overflow-hidden">
+        <div className="lg:col-span-2">
+          <Card className="h-96 md:h-screen flex flex-col overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-accent-light">
                 🌐 Shared Browser
@@ -147,8 +148,7 @@ export default function RoomPage() {
             {room.currentUrl && (
               <p className="text-xs text-gray-400 mt-2 truncate">{room.currentUrl}</p>
             )}
-          </Card></Card>
-          )}
+          </Card>
         </div>
 
         {/* Right Sidebar */}

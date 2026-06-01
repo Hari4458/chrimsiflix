@@ -31,7 +31,7 @@ export const socketService = {
 
   getSocket: (): Socket | null => socket,
 
-  on: <T,>(event: string, callback: (data: T) => void) => {
+  on: <T = any>(event: string, callback: (data: T) => void) => {
     if (socket) {
       socket.on(event, callback)
     }
@@ -43,7 +43,7 @@ export const socketService = {
     }
   },
 
-  emit: <T,>(event: string, data?: T) => {
+  emit: <T = any>(event: string, data?: T) => {
     if (socket?.connected) {
       socket.emit(event, data)
     }

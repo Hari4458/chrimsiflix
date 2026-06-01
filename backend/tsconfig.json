@@ -13,8 +13,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "moduleResolution": "node",
-    "allowImportingTsExtensions": true
+    "moduleResolution": "node"
   },
   "include": ["src", "db"],
   "exclude": ["node_modules", "dist"]
