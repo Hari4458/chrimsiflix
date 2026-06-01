@@ -15,6 +15,10 @@ export class UserService {
   }
 
   static async getUserById(userId: string): Promise<User | null> {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(userId)) {
+      return null
+    }
     const result = await pool.query(
       `SELECT id, name, room_id as "roomId", is_owner as "isOwner", has_control as "hasControl", cursor_x as "cursorX", cursor_y as "cursorY", created_at as "createdAt"
        FROM users WHERE id = $1`,
@@ -88,6 +92,10 @@ export class RoomService {
   }
 
   static async getRoomById(roomId: string): Promise<Room | null> {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(roomId)) {
+      return null
+    }
     const result = await pool.query(
       `SELECT id, code, owner_id as "ownerId", is_locked as "isLocked", current_url as "currentUrl", created_at as "createdAt", updated_at as "updatedAt"
        FROM rooms WHERE id = $1`,
