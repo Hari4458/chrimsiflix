@@ -150,8 +150,8 @@ router.post('/rooms/:roomId/url', authenticateToken, async (req: Request, res: R
     const payload = token ? JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()) as JWTPayload : null
     const user = payload ? await UserService.getUserById(payload.userId) : null
 
-    if (!user || !user.isOwner) {
-      return res.status(403).json({ message: 'Only room owner can update URL' })
+    if (!user || user.roomId !== roomId) {
+      return res.status(403).json({ message: 'Only room participants can update URL' })
     }
 
     await RoomService.updateRoomUrl(roomId, url)

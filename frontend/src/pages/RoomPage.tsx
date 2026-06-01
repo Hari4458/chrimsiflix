@@ -150,9 +150,6 @@ export default function RoomPage() {
                 url={room.currentUrl}
                 isLoading={isLoadingUrl}
               />
-              {!currentUser.hasControl && (
-                <div className="absolute inset-0 bg-transparent z-10 cursor-not-allowed" title="Request control to interact with the browser" />
-              )}
               <CursorOverlay />
             </div>
             {room.currentUrl && (
@@ -163,12 +160,10 @@ export default function RoomPage() {
 
         {/* Right Sidebar */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          {currentUser.isOwner && (
-            <OwnerControlsPanel
-              onEndRoom={handleEndRoom}
-              onTransferOwnership={handleTransferOwnership}
-            />
-          )}
+          <OwnerControlsPanel
+            onEndRoom={handleEndRoom}
+            onTransferOwnership={handleTransferOwnership}
+          />
 
           <ParticipantsPanel
             onGrantControl={handleGrantControl}
