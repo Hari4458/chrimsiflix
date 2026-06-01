@@ -1,0 +1,31 @@
+[build]
+builder = "nixpacks"
+buildpacks = ["node"]
+
+[env]
+DATABASE_URL = { required = true }
+JWT_SECRET = { required = true }
+CORS_ORIGIN = "https://chrimsiflix-frontend.railway.app"
+NODE_ENV = "production"
+PORT = "10000"
+
+[[services]]
+name = "chrimsiflix-backend"
+plan = "starter"
+runtime = "node"
+startCommand = "npm start"
+envVars = [
+  { name = "DATABASE_URL", required = true },
+  { name = "JWT_SECRET", required = true },
+  { name = "CORS_ORIGIN", value = "https://chrimsiflix-frontend.railway.app" },
+  { name = "NODE_ENV", value = "production" }
+]
+
+[[services]]
+name = "chrimsiflix-frontend"
+plan = "starter"
+startCommand = "npm run build && npm run preview"
+envVars = [
+  { name = "VITE_API_URL", value = "https://chrimsiflix-backend.railway.app" },
+  { name = "VITE_SOCKET_URL", value = "https://chrimsiflix-backend.railway.app" }
+]

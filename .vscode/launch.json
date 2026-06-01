@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend Debug",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/src/server.ts",
+      "restart": true,
+      "runtimeArgs": ["--loader", "ts-node/esm"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Attach to Backend",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "internalConsoleOptions": "neverOpen"
+    }
+  ],
+  "compounds": []
+}

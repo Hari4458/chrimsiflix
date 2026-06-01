@@ -1,0 +1,23 @@
+name: ChrimsiFlix
+build:
+  builds:
+    - src: backend
+      use: node-server
+    - src: frontend
+      use: static-build
+      config:
+        buildCommand: npm run build
+        outputDirectory: dist
+env:
+  - name: NODE_ENV
+    default: production
+  - name: DATABASE_URL
+    description: PostgreSQL connection string
+  - name: JWT_SECRET
+    description: JWT signing secret (generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+  - name: CORS_ORIGIN
+    default: https://chrimsiflix.vercel.app
+  - name: VITE_API_URL
+    default: https://chrimsiflix-backend.vercel.app
+  - name: VITE_SOCKET_URL
+    default: https://chrimsiflix-backend.vercel.app

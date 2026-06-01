@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: chrimsiflix-backend
+    env: node
+    plan: free
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://chrimsiflix-frontend.onrender.com
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+
+  - type: static
+    name: chrimsiflix-frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://chrimsiflix-backend.onrender.com
+      - key: VITE_SOCKET_URL
+        value: https://chrimsiflix-backend.onrender.com
