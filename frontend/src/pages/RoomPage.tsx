@@ -52,6 +52,12 @@ export default function RoomPage() {
       handleLeaveRoom()
     })
 
+    socketService.on('website:load', ({ url }) => {
+      if (room) {
+        setRoom({ ...room, currentUrl: url })
+      }
+    })
+
     socketService.on('error', ({ message }) => {
       console.error('Socket error:', message)
     })
@@ -63,6 +69,7 @@ export default function RoomPage() {
       socketService.off('cursor:move')
       socketService.off('chat:message')
       socketService.off('room:closed')
+      socketService.off('website:load')
       socketService.off('error')
     }
   }, [room, currentUser, participants])

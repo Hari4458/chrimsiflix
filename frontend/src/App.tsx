@@ -10,15 +10,21 @@ function App() {
   const { room, currentUser, setConnected, isConnected } = useRoomStore()
 
   useEffect(() => {
-    // Connect to socket
-    socketService.connect()
-    setConnected(true)
+    if (room && currentUser) {
+      const token = localStorage.getItem('token') || ''
+      socketService.connect(token)
+      socketService.joinRoom(room.code)
+      setConnected(true)
+    } else {
+      socketService.disconnect()
+      setConnected(false)
+    }
 
     return () => {
       socketService.disconnect()
       setConnected(false)
     }
-  }, [setConnected])
+  }, [room, currentUser, setConnected])
 
   if (isLoading) {
     return <LoadingScreen />
