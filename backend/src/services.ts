@@ -60,15 +60,22 @@ export class UserService {
 }
 
 export class RoomService {
-  static async createRoom(ownerId: string, code: string): Promise<Room> {
+  static async createRoom(ownerId: string | null, code: string): Promise<Room> {
     const id = generateId()
     const result = await pool.query(
       `INSERT INTO rooms (id, code, owner_id, is_locked)
        VALUES ($1, $2, $3, false)
        RETURNING id, code, owner_id as "ownerId", is_locked as "isLocked", current_url as "currentUrl", created_at as "createdAt", updated_at as "updatedAt"`,
-      [id, code, ownerId]
+      [id, code, ownerId || null]
     )
     return result.rows[0]
+  }
+
+  static async updateRoomOwner(roomId: string, ownerId: string): Promise<void> {
+    await pool.query(
+      `UPDATE rooms SET owner_id = $1, updated_at = NOW() WHERE id = $2`,
+      [ownerId, roomId]
+    )
   }
 
   static async getRoomByCode(code: string): Promise<Room | null> {

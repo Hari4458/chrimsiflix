@@ -16,8 +16,10 @@ router.post('/rooms/create', async (req: Request, res: Response) => {
     }
 
     const roomCode = generateRoomCode()
-    const room = await RoomService.createRoom('', roomCode)
+    const room = await RoomService.createRoom(null, roomCode)
     const user = await UserService.createUser(userName, room.id, true)
+    await RoomService.updateRoomOwner(room.id, user.id)
+    room.ownerId = user.id
     const token = generateToken(user.id, room.id)
 
     res.json({
