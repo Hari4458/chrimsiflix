@@ -81,18 +81,17 @@ export const setupSocketEvents = (io: Server) => {
     })
 
     // Cursor movement
-    socket.on('cursor:move', async (data: { x: number; y: number }) => {
+    socket.on('cursor:move', (data: { x: number; y: number }) => {
       if (!socket.roomId || !socket.userId) return
 
       try {
-        await UserService.updateCursor(socket.userId, data.x, data.y)
-        const user = await UserService.getUserById(socket.userId)
+        const x = Math.round(data.x)
+        const y = Math.round(data.y)
 
         socket.to(socket.roomId).emit('cursor:move', {
           userId: socket.userId,
-          userName: user?.name || 'User',
-          x: data.x,
-          y: data.y,
+          x,
+          y,
         })
       } catch (error) {
         console.error('Cursor move error:', error)
